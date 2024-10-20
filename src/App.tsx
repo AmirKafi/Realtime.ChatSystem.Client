@@ -1,88 +1,65 @@
+import { HubConnection, HubConnectionBuilder, HubConnectionState, LogLevel } from "@microsoft/signalr";
 import "./App.css";
-import { Button } from "./components/ui/button";
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormDescription,
-  FormMessage,
-  Form,
-} from "./components/ui/form";
-import { Input } from "./components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { ModeToggle } from "./components/ui/mode-toggle";
-
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  chatRoom: z.string().min(2, {
-    message: "ChatRoom Name must be at least 2 characters.",
-  }),
-});
+import Lobby from "./components/lobby";
+import { useState } from "react";
+import { toast } from "sonner";
+import ChatPage from "./components/chat-page";
+type Message = {
+  user: string;
+  message: string;
+}
 
 function App() {
-  // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      chatRoom: "",
-    },
-  });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-  }
+  const [conn, setConn] = useState<HubConnection>();
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [room,setRoom]=useState("");
+  const [userName,setUsername]=useState("");
+  
+  const joinChat = async (username: string, chatRoom: string) => {
+    try {
+      const connection = new HubConnectionBuilder()
+        .withUrl("http://localhost:5039/Chat")
+        .configureLogging(LogLevel.Information)
+        .build();
+
+      connection.on("JoinGroupChat", (user: string, msg: string) => {
+        //we don't want to show toast to user that sent the message
+        if(user != username){
+          toast("Message From " + user + ": " + msg);
+        }
+        setRoom(chatRoom);
+        setUsername(user);
+      });
+
+      connection.on("ReceiveMessageInGroup",(user:string,message:string)=>{
+        //we don't want to show toast to user that sent the message
+        if(user != username){
+          toast("Message From " + user + ": " + message);
+        }
+        setMessages((prevMessages) => [...prevMessages,{user,message}]);
+      });
+
+      await connection.start();
+      await connection.invoke("JoinGroupChat",{username,chatRoom});
+      if (connection.state === HubConnectionState.Disconnected) {
+        console.error("Connection is disconnected!");
+        await connection.start();
+      }
+      
+      setConn(connection);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <>
-      <div className="absolute top-0 left-0 m-4 text-white px-4 py-2 rounded">
-        <ModeToggle />
-      </div>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input placeholder="AmirKafi" {...field} />
-                </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="chatRoom"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Chat Room</FormLabel>
-                <FormControl>
-                  <Input placeholder="" {...field} />
-                </FormControl>
-                <FormDescription>
-                  The Name of Chat Room you want to join.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit">Join</Button>
-        </form>
-      </Form>
+        {conn == null ? (
+        <Lobby joinChat={joinChat}/>
+      ) : (
+        <ChatPage username={userName} chatRoom={room} connection={conn} messages={messages}/>
+      )}
     </>
   );
 }
