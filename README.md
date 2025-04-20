@@ -1,50 +1,52 @@
-# React + TypeScript + Vite
+# Realtime Chat System Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A showcase project demonstrating my expertise in modern web development using React, TypeScript, and real-time communication technologies.
 
-Currently, two official plugins are available:
+## Project Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This application is a personal showcase project that demonstrates my proficiency with:
 
-## Expanding the ESLint configuration
+- React 18 with TypeScript
+- Real-time communication using SignalR
+- Modern UI development with TailwindCSS and Radix UI
+- Theme customization (Dark/Light mode)
+- Form handling and validation
+- Component-based architecture
+- Toast notifications for real-time feedback
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Technical Implementation
 
-- Configure the top-level `parserOptions` property like this:
+The project demonstrates my ability to work with:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- 🚀 **Vite** - For lightning-fast development experience
+- 💎 **TypeScript** - For type-safe code and better developer experience
+- 🎨 **TailwindCSS** - For modern, responsive styling
+- 🔄 **SignalR** - For handling real-time communication
+- 🎯 **React Hook Form** - For efficient form state management
+- ✨ **Radix UI** - For accessible UI components
+- 🌓 **Theme Switching** - Custom theme implementation
+- 🔔 **Sonner** - For toast notifications
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Project Structure Highlights
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- `components/`: Modular UI components including chat interface and lobby
+- `lib/`: Utility functions and shared logic
+- `components/ui/`: Reusable UI components like buttons, forms, and theme toggles
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Screenshots
+
+[Screenshots will be added to showcase the UI and features]
+
+## Purpose
+
+This project serves as a demonstration of my skills and is not intended as a tool or library for production use. It showcases my ability to:
+
+- Implement real-time features in a modern web application
+- Create clean, maintainable React components
+- Handle complex state management
+- Build responsive and accessible user interfaces
+- Work with modern development tools and practices
+
+## Contact
+
+Feel free to reach out if you'd like to discuss this project or potential opportunities!
